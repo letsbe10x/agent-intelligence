@@ -1,0 +1,32 @@
+# Default config for persona_simulator. Copy and override per deployment.
+name: persona_simulator
+version: "1"
+prompt_path: prompts/main.md
+
+provider:
+  name: anthropic
+  model: claude-sonnet-4-7
+  api_key: ${env:ANTHROPIC_API_KEY}
+  timeout_s: 60
+  max_retries: 2
+  temperature: 0.7
+  max_output_tokens: 4096
+
+budget:
+  max_usd_per_run: 0.50          # one validation pack tier, "quick" tier
+  max_input_tokens_per_run: 8000
+  max_output_tokens_per_run: 4000
+  on_exceed: raise
+
+observability:
+  otel_enabled: true
+  otel_service_name: agent-intelligence
+  receipts_enabled: true
+  receipts_path: ./.ai-receipts
+
+params:
+  n_personas: 3
+  reaction_depth: medium
+  require_objections: true
+
+tools: []

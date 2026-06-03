@@ -1,0 +1,94 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "agent-intelligence"
+version = "0.1.0"
+description = "Configurable, multi-model agentic intelligence framework with receipt-backed execution. Inspired by NVIDIA NeMo Agent Toolkit; engineered for letsbe10x."
+readme = "README.md"
+requires-python = ">=3.11"
+license = { text = "Apache-2.0" }
+authors = [{ name = "letsbe10x", email = "noreply@cogsmith.ai" }]
+keywords = [
+  "agentic",
+  "llm",
+  "multi-model",
+  "configurable",
+  "receipt",
+  "pvr",
+  "letsbe10x",
+]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "License :: OSI Approved :: Apache Software License",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = [
+  "pydantic>=2.7",
+  "pyyaml>=6.0",
+  "httpx>=0.27",
+  "click>=8.1",
+  "rich>=13.7",
+  "opentelemetry-api>=1.25",
+  "opentelemetry-sdk>=1.25",
+]
+
+[project.optional-dependencies]
+anthropic = ["anthropic>=0.40"]
+openai = ["openai>=1.40"]
+litellm = ["litellm>=1.40"]
+mcp = ["mcp>=0.9"]
+all = [
+  "anthropic>=0.40",
+  "openai>=1.40",
+  "litellm>=1.40",
+  "mcp>=0.9",
+]
+dev = [
+  "pytest>=8.0",
+  "pytest-asyncio>=0.23",
+  "pytest-mock>=3.12",
+  "ruff>=0.6",
+  "mypy>=1.10",
+]
+
+[project.scripts]
+ai-cli = "agent_intelligence.cli.main:main"
+
+[project.entry-points."agent_intelligence.providers"]
+anthropic = "agent_intelligence.providers.anthropic:AnthropicProvider"
+openai = "agent_intelligence.providers.openai:OpenAIProvider"
+litellm = "agent_intelligence.providers.litellm:LiteLLMProvider"
+mock = "agent_intelligence.providers.mock:MockProvider"
+
+[project.entry-points."agent_intelligence.agents"]
+persona_simulator = "agent_intelligence.agents.persona_simulator:PersonaSimulatorAgent"
+citation_resolver = "agent_intelligence.agents.citation_resolver:CitationResolverAgent"
+
+[project.urls]
+Homepage = "https://github.com/letsbe10x/agent-intelligence"
+Source = "https://github.com/letsbe10x/agent-intelligence"
+Issues = "https://github.com/letsbe10x/agent-intelligence/issues"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src/agent_intelligence"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP", "RUF"]
+ignore = [
+  "E501",   # long docstrings/pricing tables are fine; tests/fixtures often have long literals
+  "B008",   # FastAPI-style Depends() and Field(default=...) at function defaults are intentional
+]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]

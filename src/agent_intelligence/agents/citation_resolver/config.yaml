@@ -1,0 +1,35 @@
+# Default config for citation_resolver. Copy and override per deployment.
+name: citation_resolver
+version: "1"
+prompt_path: prompts/main.md
+
+provider:
+  # Only used if params.use_llm_for_semantic_check is true. Otherwise the
+  # agent never hits the provider — but the config still requires one because
+  # the framework treats provider as a structural field.
+  name: anthropic
+  model: claude-haiku-4-7
+  api_key: ${env:ANTHROPIC_API_KEY}
+  timeout_s: 30
+  temperature: 0.1
+  max_output_tokens: 256
+
+budget:
+  max_usd_per_run: 0.10
+  max_input_tokens_per_run: 20000
+  max_output_tokens_per_run: 2000
+  on_exceed: raise
+
+observability:
+  otel_enabled: true
+  otel_service_name: agent-intelligence
+  receipts_enabled: true
+  receipts_path: ./.ai-receipts
+
+params:
+  http_timeout_s: 5
+  http_max_concurrency: 10
+  require_https_for_external: true
+  use_llm_for_semantic_check: false  # set true for production gates; costs an LLM call per URL
+
+tools: []
