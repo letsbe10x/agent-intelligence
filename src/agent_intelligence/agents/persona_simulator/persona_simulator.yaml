@@ -1,0 +1,32 @@
+# persona_simulator — fully YAML-defined agent.
+# The agent's behaviour is whatever the LLM decides given this prompt + this
+# tool list. The framework only owns the ReAct loop.
+name: persona_simulator
+version: "2"
+prompt_path: prompt.md
+
+provider:
+  name: anthropic
+  model: claude-sonnet-4-7
+  api_key: ${env:ANTHROPIC_API_KEY:-}
+  temperature: 0.7
+  max_output_tokens: 1500
+  timeout_s: 90
+
+budget:
+  max_usd_per_run: 1.50
+  max_input_tokens_per_run: 50000
+  max_output_tokens_per_run: 12000
+
+observability:
+  receipts_enabled: true
+
+# The tools this agent may call. The LLM picks WHEN and IN WHAT ORDER.
+tool_names:
+  - persona.generate
+  - persona.evaluate_diversity
+  - synthesize.extract_themes
+  - synthesize.finalize_validation
+
+max_iterations: 20
+max_parse_retries: 2

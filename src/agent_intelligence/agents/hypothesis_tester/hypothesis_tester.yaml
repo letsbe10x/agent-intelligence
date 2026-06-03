@@ -1,0 +1,26 @@
+name: hypothesis_tester
+version: "1"
+prompt_path: prompt.md
+
+provider:
+  name: anthropic
+  model: claude-sonnet-4-7
+  api_key: ${env:ANTHROPIC_API_KEY:-}
+  temperature: 0.3
+  max_output_tokens: 1500
+  timeout_s: 60
+
+budget:
+  max_usd_per_run: 0.50
+  max_input_tokens_per_run: 30000
+  max_output_tokens_per_run: 6000
+
+observability:
+  receipts_enabled: true
+
+# Hypothesis tester uses the synthesis + extract themes tools to decompose and
+# score a hypothesis. No external network or lookup needed.
+tool_names:
+  - synthesize.extract_themes
+
+max_iterations: 12

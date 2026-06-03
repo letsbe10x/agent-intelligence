@@ -1,25 +1,17 @@
-"""agent-intelligence — configurable, multi-model agentic framework with receipt-backed execution.
+"""agent-intelligence — agentic framework where the LLM owns decisions.
 
-Public surface:
-    from agent_intelligence import Agent, AgentConfig, AgentContext, AgentResult, Receipt
-    from agent_intelligence import LLMProvider, LLMRequest, LLMResponse, Message
-    from agent_intelligence import load_config, registry, run_agent
+The framework provides:
+    - ReAct loop primitive (`react.ReActLoop`) — LLM picks tools, decides to stop.
+    - Tool registry (`tools.tool_registry`) — built-in + custom tools registered
+      via @tool decorator or entry points.
+    - Multi-model providers (`providers.*`) — Anthropic, OpenAI, LiteLLM, Mock.
+    - Receipts, budgets, OTel-compatible tracing — every step recorded.
+    - YAML agents — an agent is a YAML config + prompt + tool list. Zero Python.
 
-The framework's contract:
-    - Agents are configured, never hardcoded. Every model, prompt, budget, timeout
-      and tool list is read from YAML at runtime.
-    - There is no silent fallback. If a config is missing or a provider is
-      unreachable, the framework raises a typed error; it does not "best-effort".
-    - Every agent invocation produces an immutable Receipt (sha256 of inputs+outputs)
-      that downstream systems (PVR, control-plane) can replay and verify.
-    - Providers and Agents are discovered via entry points so third parties can
-      extend without forking.
-
-Inspired by NVIDIA NeMo Agent Toolkit (Apache-2.0). Engineered independently for
-the letsbe10x PVR stack.
+Inspired by NVIDIA AgentIQ / NeMo Agent Toolkit. Engineered for the letsbe10x
+PVR stack.
 """
 
-from agent_intelligence.core.agent import Agent, AgentResult
 from agent_intelligence.core.config import AgentConfig, load_config
 from agent_intelligence.core.context import AgentContext
 from agent_intelligence.core.errors import (
@@ -30,17 +22,24 @@ from agent_intelligence.core.errors import (
 )
 from agent_intelligence.observability.receipts import Receipt, ReceiptStore
 from agent_intelligence.providers.base import LLMProvider, LLMRequest, LLMResponse, Message
+from agent_intelligence.react.loop import ReActLoop, ReActOutcome, ReActStep
+from agent_intelligence.react.runner import (
+    ReActAgentConfig,
+    ReActAgentResult,
+    load_react_config,
+    run_react_agent,
+)
 from agent_intelligence.registry.registry import registry
-from agent_intelligence.runner import run_agent
+from agent_intelligence.tools.base import Tool, ToolResult, tool
+from agent_intelligence.tools.registry import ToolRegistry, tool_registry
+from agent_intelligence.tracing.events import TraceEmitter, TraceEvent
 
-__version__ = "0.1.0"
+__version__ = "0.2.0"
 
 __all__ = [
-    "Agent",
     "AgentConfig",
     "AgentContext",
     "AgentError",
-    "AgentResult",
     "BudgetExceededError",
     "ConfigError",
     "LLMProvider",
@@ -48,9 +47,22 @@ __all__ = [
     "LLMResponse",
     "Message",
     "ProviderError",
+    "ReActAgentConfig",
+    "ReActAgentResult",
+    "ReActLoop",
+    "ReActOutcome",
+    "ReActStep",
     "Receipt",
     "ReceiptStore",
+    "Tool",
+    "ToolRegistry",
+    "ToolResult",
+    "TraceEmitter",
+    "TraceEvent",
     "load_config",
+    "load_react_config",
     "registry",
-    "run_agent",
+    "run_react_agent",
+    "tool",
+    "tool_registry",
 ]

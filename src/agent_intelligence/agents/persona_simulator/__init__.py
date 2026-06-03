@@ -1,11 +1,8 @@
-"""Persona Simulator agent.
+"""persona_simulator — YAML-defined ReAct agent.
 
-Generates N ICP personas and simulates each one reacting to a product Bet.
-Output is a list of persona-specific reactions with structured signals
-(resistance / agreement / specific objections / specific endorsements) plus
-a citation chain back to the input Bet.
+The agent has NO Python code. It is defined entirely by:
+  - persona_simulator.yaml (provider, tools, budget, prompt path)
+  - prompt.md (system prompt)
+
+Run via: ai-cli react-run persona_simulator.yaml <input>
 """
-
-from agent_intelligence.agents.persona_simulator.agent import PersonaSimulatorAgent
-
-__all__ = ["PersonaSimulatorAgent"]

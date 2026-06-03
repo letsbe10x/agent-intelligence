@@ -4,8 +4,8 @@ build-backend = "hatchling.build"
 
 [project]
 name = "agent-intelligence"
-version = "0.1.0"
-description = "Configurable, multi-model agentic intelligence framework with receipt-backed execution. Inspired by NVIDIA NeMo Agent Toolkit; engineered for letsbe10x."
+version = "0.2.0"
+description = "Agentic framework where the LLM owns decisions: ReAct loop + tool registry + YAML agents. Inspired by NVIDIA NeMo Agent Toolkit; engineered for letsbe10x."
 readme = "README.md"
 requires-python = ">=3.11"
 license = { text = "Apache-2.0" }
@@ -66,9 +66,15 @@ openai = "agent_intelligence.providers.openai:OpenAIProvider"
 litellm = "agent_intelligence.providers.litellm:LiteLLMProvider"
 mock = "agent_intelligence.providers.mock:MockProvider"
 
-[project.entry-points."agent_intelligence.agents"]
-persona_simulator = "agent_intelligence.agents.persona_simulator:PersonaSimulatorAgent"
-citation_resolver = "agent_intelligence.agents.citation_resolver:CitationResolverAgent"
+[project.entry-points."agent_intelligence.tools"]
+http_get = "agent_intelligence.tools.builtins.http:http_get"
+persona_generate = "agent_intelligence.tools.builtins.persona:persona_generate"
+persona_evaluate_diversity = "agent_intelligence.tools.builtins.persona:persona_evaluate_diversity"
+synthesize_extract_themes = "agent_intelligence.tools.builtins.synthesize:synthesize_extract_themes"
+synthesize_finalize_validation = "agent_intelligence.tools.builtins.synthesize:synthesize_finalize_validation"
+lookup_id = "agent_intelligence.tools.builtins.lookup:lookup_id"
+verify_semantic = "agent_intelligence.tools.builtins.verify:verify_semantic"
+citation_finalize = "agent_intelligence.tools.builtins.citation:citation_finalize"
 
 [project.urls]
 Homepage = "https://github.com/letsbe10x/agent-intelligence"
