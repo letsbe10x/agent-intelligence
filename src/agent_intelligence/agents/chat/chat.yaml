@@ -1,0 +1,34 @@
+# chat — general-purpose conversational agent.
+#
+# Tools: full mixture — every built-in + every skill-hub skill. The LLM
+# decides which tool to invoke given the conversation. Multi-turn supported
+# by passing the full conversation history in the input.
+name: chat
+version: "1"
+prompt_path: prompt.md
+
+provider:
+  name: anthropic
+  model: claude-sonnet-4-7
+  api_key: ${env:ANTHROPIC_API_KEY:-}
+  temperature: 0.5
+  max_output_tokens: 2000
+  timeout_s: 120
+
+budget:
+  max_usd_per_run: 2.0
+  max_input_tokens_per_run: 100000
+  max_output_tokens_per_run: 30000
+
+observability:
+  receipts_enabled: true
+
+# Mixture: ALL builtins + ALL skill-hub skills as tools the LLM can pick.
+tool_sources:
+  - type: builtin
+    name: builtin-all
+  - type: skillhub
+    name: skillhub-all
+
+max_iterations: 25
+max_parse_retries: 2
