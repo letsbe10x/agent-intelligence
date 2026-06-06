@@ -64,7 +64,13 @@ ai-cli = "agent_intelligence.cli.main:main"
 anthropic = "agent_intelligence.providers.anthropic:AnthropicProvider"
 openai = "agent_intelligence.providers.openai:OpenAIProvider"
 litellm = "agent_intelligence.providers.litellm:LiteLLMProvider"
+ollama = "agent_intelligence.providers.ollama:OllamaProvider"
 mock = "agent_intelligence.providers.mock:MockProvider"
+
+[project.entry-points."agent_intelligence.tool_sources"]
+builtin = "agent_intelligence.tools.sources.builtin:BuiltinToolSource"
+skillhub = "agent_intelligence.tools.sources.skillhub:SkillHubToolSource"
+mcp = "agent_intelligence.tools.sources.mcp_source:MCPToolSource"
 
 [project.entry-points."agent_intelligence.tools"]
 http_get = "agent_intelligence.tools.builtins.http:http_get"

@@ -1,5 +1,5 @@
 name: hypothesis_tester
-version: "1"
+version: "2"
 prompt_path: prompt.md
 
 provider:
@@ -12,15 +12,20 @@ provider:
 
 budget:
   max_usd_per_run: 0.50
-  max_input_tokens_per_run: 30000
-  max_output_tokens_per_run: 6000
 
 observability:
   receipts_enabled: true
 
-# Hypothesis tester uses the synthesis + extract themes tools to decompose and
-# score a hypothesis. No external network or lookup needed.
-tool_names:
-  - synthesize.extract_themes
+tool_sources:
+  - type: builtin
+    name: synthesis
+    config:
+      allowlist: [synthesize.extract_themes]
+  - type: skillhub
+    name: research-skills
+    config:
+      allowlist:
+        - lets-brainstorm
+        - lets-research-prd-grooming
 
-max_iterations: 12
+max_iterations: 15

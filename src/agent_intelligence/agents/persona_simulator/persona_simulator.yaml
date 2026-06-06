@@ -1,8 +1,7 @@
-# persona_simulator — fully YAML-defined agent.
-# The agent's behaviour is whatever the LLM decides given this prompt + this
-# tool list. The framework only owns the ReAct loop.
+# persona_simulator — agentic config with TOOL MIXTURE
+# The LLM picks among: built-in tools + ALL skill-hub skills + (optional) MCP tools.
 name: persona_simulator
-version: "2"
+version: "3"
 prompt_path: prompt.md
 
 provider:
@@ -14,19 +13,34 @@ provider:
   timeout_s: 90
 
 budget:
-  max_usd_per_run: 1.50
-  max_input_tokens_per_run: 50000
-  max_output_tokens_per_run: 12000
+  max_usd_per_run: 2.0
+  max_input_tokens_per_run: 80000
+  max_output_tokens_per_run: 20000
 
 observability:
   receipts_enabled: true
 
-# The tools this agent may call. The LLM picks WHEN and IN WHAT ORDER.
-tool_names:
-  - persona.generate
-  - persona.evaluate_diversity
-  - synthesize.extract_themes
-  - synthesize.finalize_validation
+# Tool sources are PLUGGABLE. Mix built-in functions with skill-hub skills.
+# Runtime overrides can add MCP server tools too.
+tool_sources:
+  - type: builtin
+    name: persona-builtins
+    config:
+      allowlist:
+        - persona.generate
+        - persona.evaluate_diversity
+        - synthesize.extract_themes
+        - synthesize.finalize_validation
 
-max_iterations: 20
+  - type: skillhub
+    name: research-skills
+    config:
+      # Only expose research/brainstorm skills as agent tools — keep the catalog focused
+      allowlist:
+        - lets-research-competitive-scan
+        - lets-research-prd-grooming
+        - lets-brainstorm
+        - lets-opportunity-discovery
+
+max_iterations: 25
 max_parse_retries: 2

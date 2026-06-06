@@ -1,9 +1,5 @@
-# citation_resolver — fully YAML-defined.
-# Given a list of claims with source_refs, the agent decides per-claim how to
-# verify: http.get for URLs, lookup.id for custom schemes, verify.semantic for
-# content checks. Aggregates with citation.finalize.
 name: citation_resolver
-version: "2"
+version: "3"
 prompt_path: prompt.md
 
 provider:
@@ -15,18 +11,19 @@ provider:
   timeout_s: 90
 
 budget:
-  max_usd_per_run: 1.00
-  max_input_tokens_per_run: 60000
-  max_output_tokens_per_run: 8000
+  max_usd_per_run: 1.0
 
 observability:
   receipts_enabled: true
 
-tool_names:
-  - http.get
-  - lookup.id
-  - verify.semantic
-  - citation.finalize
+tool_sources:
+  - type: builtin
+    name: citation-builtins
+    config:
+      allowlist:
+        - http.get
+        - lookup.id
+        - verify.semantic
+        - citation.finalize
 
 max_iterations: 30
-max_parse_retries: 2
